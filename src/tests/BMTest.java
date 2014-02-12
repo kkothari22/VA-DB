@@ -659,5 +659,6 @@ public class BMTest {
 		}
 
 		Runtime.getRuntime().exit(0);
+		System.out.println("Fuck You");
 	}
 }
