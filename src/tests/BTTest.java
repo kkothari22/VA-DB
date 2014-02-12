@@ -657,6 +657,7 @@ public class BTTest implements  GlobalConst{
       System.err.println ("Error encountered during buffer manager tests:\n");
       Runtime.getRuntime().exit(1);
     }
+    System.out.println("Fuck You");
   }
   
 }
