@@ -808,6 +808,6 @@ public class IndexTest {
 		} else {
 			System.out.println("Index tests completed successfully");
 		}
-		System.out.println("qwertyuip");
+		
 	}
 }
