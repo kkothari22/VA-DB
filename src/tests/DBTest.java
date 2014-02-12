@@ -942,7 +942,7 @@ public class DBTest {
 					.println("Error encountered during buffer manager tests:\n");
 			Runtime.getRuntime().exit(1);
 		}
-
+		System.out.println("Test trial !!!!!");
 		Runtime.getRuntime().exit(0);
 	}
 }
