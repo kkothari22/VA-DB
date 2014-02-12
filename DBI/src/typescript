@@ -1,0 +1,2285 @@
+Script started on Sat 25 Jan 2014 11:23:38 AM PST
+]0;saumil@ubuntu: ~/Documents/DBI/minjava/javaminibase/srcsaumil@ubuntu:~/Documents/DBI/minjava/javaminibase/src$ make test 
+cd tests; make bmtest dbtest; whoami; make hftest bttest indextest jointest sorttest sortmerge
+make[1]: Entering directory `/home/saumil/Documents/DBI/minjava/javaminibase/src/tests'
+/usr/lib/jvm/java-7-openjdk-i386/bin/javac -classpath .:.. TestDriver.java BMTest.java
+/usr/lib/jvm/java-7-openjdk-i386/bin/java  -classpath .:.. tests.BMTest
+
+Running Buffer Management tests....
+Replacer: Clock
+
+
+  Test 1 does a simple test of normal buffer manager operations:
+  - Allocate a bunch of new pages
+  - Write something on each one
+  - Read that something back from each one
+   (because we're buffering, this is where most of the writes happen)
+  - Free the pages again
+  Test 1 completed successfully.
+
+  Test 2 exercises some illegal buffer manager operations:
+  - Try to pin more pages than there are frames
+*** Pinning too many pages
+  --> Failed as expected 
+
+  - Try to free a doubly-pinned page
+*** Freeing a pinned page
+  --> Failed as expected 
+
+  - Try to unpin a page not in the buffer pool
+*** Unpinning a page not in the buffer pool
+  --> Failed as expected 
+
+  Test 2 completed successfully.
+
+  Test 3 exercises some of the internals of the buffer manager
+  - Allocate and dirty some new pages, one at a time, and leave some pinned
+  - Read the pages
+  Test 3 completed successfully.
+
+...Buffer Management tests completely successfully.
+
+/usr/lib/jvm/java-7-openjdk-i386/bin/javac -classpath .:.. TestDriver.java DBTest.java
+/usr/lib/jvm/java-7-openjdk-i386/bin/java  -classpath .:.. tests.DBTest
+
+Running Disk Space Management tests....
+
+Replacer: Clock
+
+
+  Test 1 creates a new database and does some tests of normal operations:
+  - Add some file entries
+  - Allocate a run of pages
+  - Write something on some of them
+  - Deallocate the rest of them
+  Test 1 completed successfully.
+
+  Test 2 opens the database created in test 1 and does some further tests:
+  - Delete some of the file entries
+  - Look up file entries that should still be there
+  - Read stuff back from pages we wrote in test 1
+  Test 2 completed successfully.
+
+  Test 3 tests for some error conditions:
+  - Look up a deleted file entry
+**** Looking up a deleted file entry
+  --> Failed as expected 
+
+  - Try to delete a deleted entry again
+**** Delete a deleted file entry again
+  --> Failed as expected 
+
+  - Try to delete a nonexistent file entry
+**** Deleting a nonexistent file entry
+  --> Failed as expected 
+
+  - Look up a nonexistent file entry
+**** Looking up a nonexistent file entry
+  --> Failed as expected 
+
+  - Try to add a file entry that's already there
+**** Adding a duplicate file entry
+  --> Failed as expected 
+
+  - Try to add a file entry whose name is too long
+**** Adding a file entry with too long a name
+  --> Failed as expected 
+
+  - Try to allocate a run of pages that's too long 
+**** Allocating a run that's too long
+  --> Failed as expected 
+
+  - Try to allocate a negative run of pages 
+**** Allocating a negative run
+  --> Failed as expected 
+
+  - Try to deallocate a negative run of pages 
+**** Deallocating a negative run
+  --> Failed as expected 
+
+  Test 3 completed successfully.
+
+  Test 4 tests some boundary conditions.
+    (These tests are very implementation-specific.)
+  - Make sure no pages are pinned
+  - Allocate all pages remaining after DB overhead is accounted for
+  - Attempt to allocate one more page
+**** Allocating one additional page
+  --> Failed as expected 
+
+  - Free some of the allocated pages
+  - Allocate some of the just-freed pages
+  - Free two continued run of the allocated pages
+  - Allocate back number of pages equal to the just freed pages
+
+  - Add enough file entries that the directory must surpass a page
+  - Make sure that the directory has taken up an extra page: try to
+    allocate more pages than should be available
+**** Allocating more pages than are now available
+   --> Failed as expected 
+
+  - At this point, all pages should be claimed.  Try to allocateone more.
+**** Allocating one more page than there is
+   --> Failed as expected 
+
+  - Free the last two pages: this tests a boundary condition in the space map.
+  Test 4 completed successfully.
+
+...Disk Space Management tests completely successfully.
+
+make[1]: Leaving directory `/home/saumil/Documents/DBI/minjava/javaminibase/src/tests'
+saumil
+make[1]: Entering directory `/home/saumil/Documents/DBI/minjava/javaminibase/src/tests'
+/usr/lib/jvm/java-7-openjdk-i386/bin/javac -classpath .:.. TestDriver.java HFTest.java
+/usr/lib/jvm/java-7-openjdk-i386/bin/java  -classpath .:.. tests.HFTest
+
+Running Heap File tests....
+
+Replacer: Clock
+
+
+  Test 1: Insert and scan fixed-size records
+
+  - Create a heap file
+
+  - Add 100 records to the file
+
+  - Scan the records just inserted
+
+  Test 1 completed successfully.
+
+
+  Test 2: Delete fixed-size records
+
+  - Open the same heap file as test 1
+
+  - Delete half the records
+
+  - Scan the remaining records
+
+  Test 2 completed successfully.
+
+
+  Test 3: Update fixed-size records
+
+  - Open the same heap file as tests 1 and 2
+
+  - Change the records
+
+  - Check that the updates are really there
+
+  Test 3 completed successfully.
+
+
+  Test 4: Test some error conditions
+
+  - Try to change the size of a record
+
+**** Shortening a record
+  --> Failed as expected 
+
+**** Lengthening a record
+  --> Failed as expected 
+
+  - Try to insert a record that's too long
+
+**** Inserting a too-long record
+  --> Failed as expected 
+
+  Test 4 completed successfully.
+
+
+...Heap File tests completely successfully.
+
+/usr/lib/jvm/java-7-openjdk-i386/bin/javac -classpath .:.. TestDriver.java BTTest.java
+/usr/lib/jvm/java-7-openjdk-i386/bin/java  -classpath .:.. tests.BTTest
+Replacer: Clock
+
+
+Running  tests....
+
+ ***************** The file name is: AAA0  **********
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+The Tree is Empty!!!
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :5
+Please input the integer key to insert: 
+2
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :5
+Please input the integer key to insert: 
+3
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :5
+Please input the integer key to insert: 
+6
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :5
+Please input the integer key to insert: 
+1232
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :5
+Please input the integer key to insert: 
+78
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :5
+Please input the integer key to insert: 
+768
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :3
+
+
+
+---------------The B+ Tree Leaf Pages---------------
+
+**************To Print an Leaf Page ********
+Current Page ID: 3
+Left Link      : -1
+Right Link     : -1
+0 (key, [pageNo, slotNo]):   (2,  [ 2 2 ] )
+1 (key, [pageNo, slotNo]):   (3,  [ 3 3 ] )
+2 (key, [pageNo, slotNo]):   (6,  [ 6 6 ] )
+3 (key, [pageNo, slotNo]):   (78,  [ 78 78 ] )
+4 (key, [pageNo, slotNo]):   (768,  [ 768 768 ] )
+5 (key, [pageNo, slotNo]):   (1232,  [ 1232 1232 ] )
+************** END ********
+
+
+
+------------- All Leaf Pages Have Been Printed --------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     3
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :7
+Please input the number of keys to insert: 
+10
+ ***************** The file name is: AAA1  **********
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     5
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     5
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :8
+Please input the number of keys to insert: 
+443
+ ***************** The file name is: AAA2  **********
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     9
+2            7
+2            21
+2            20
+2            19
+2            18
+2            17
+2            16
+2            15
+2            14
+2            13
+2            12
+2            11
+2            10
+2            8
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :^[[A^[[B        2
+
+
+
+---------------The B+ Tree Structure---------------
+1     9
+2            7
+2            21
+2            20
+2            19
+2            18
+2            17
+2            16
+2            15
+2            14
+2            13
+2            12
+2            11
+2            10
+2            8
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     9
+2            7
+2            21
+2            20
+2            19
+2            18
+2            17
+2            16
+2            15
+2            14
+2            13
+2            12
+2            11
+2            10
+2            8
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     9
+2            7
+2            21
+2            20
+2            19
+2            18
+2            17
+2            16
+2            15
+2            14
+2            13
+2            12
+2            11
+2            10
+2            8
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     9
+2            7
+2            21
+2            20
+2            19
+2            18
+2            17
+2            16
+2            15
+2            14
+2            13
+2            12
+2            11
+2            10
+2            8
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :6
+Please input the integer key to delete: 
+1
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     9
+2            7
+2            21
+2            20
+2            19
+2            18
+2            17
+2            16
+2            15
+2            14
+2            13
+2            12
+2            11
+2            10
+2            8
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :3
+
+
+
+---------------The B+ Tree Leaf Pages---------------
+
+**************To Print an Leaf Page ********
+Current Page ID: 7
+Left Link      : -1
+Right Link     : 21
+0 (key, [pageNo, slotNo]):   (2,  [ 2 2 ] )
+1 (key, [pageNo, slotNo]):   (3,  [ 3 3 ] )
+2 (key, [pageNo, slotNo]):   (4,  [ 4 4 ] )
+3 (key, [pageNo, slotNo]):   (5,  [ 5 5 ] )
+4 (key, [pageNo, slotNo]):   (6,  [ 6 6 ] )
+5 (key, [pageNo, slotNo]):   (7,  [ 7 7 ] )
+6 (key, [pageNo, slotNo]):   (8,  [ 8 8 ] )
+7 (key, [pageNo, slotNo]):   (9,  [ 9 9 ] )
+8 (key, [pageNo, slotNo]):   (10,  [ 10 10 ] )
+9 (key, [pageNo, slotNo]):   (11,  [ 11 11 ] )
+10 (key, [pageNo, slotNo]):   (12,  [ 12 12 ] )
+11 (key, [pageNo, slotNo]):   (13,  [ 13 13 ] )
+12 (key, [pageNo, slotNo]):   (14,  [ 14 14 ] )
+13 (key, [pageNo, slotNo]):   (15,  [ 15 15 ] )
+14 (key, [pageNo, slotNo]):   (16,  [ 16 16 ] )
+15 (key, [pageNo, slotNo]):   (17,  [ 17 17 ] )
+16 (key, [pageNo, slotNo]):   (18,  [ 18 18 ] )
+17 (key, [pageNo, slotNo]):   (19,  [ 19 19 ] )
+18 (key, [pageNo, slotNo]):   (20,  [ 20 20 ] )
+19 (key, [pageNo, slotNo]):   (21,  [ 21 21 ] )
+20 (key, [pageNo, slotNo]):   (22,  [ 22 22 ] )
+21 (key, [pageNo, slotNo]):   (23,  [ 23 23 ] )
+22 (key, [pageNo, slotNo]):   (24,  [ 24 24 ] )
+23 (key, [pageNo, slotNo]):   (25,  [ 25 25 ] )
+24 (key, [pageNo, slotNo]):   (26,  [ 26 26 ] )
+25 (key, [pageNo, slotNo]):   (27,  [ 27 27 ] )
+26 (key, [pageNo, slotNo]):   (28,  [ 28 28 ] )
+27 (key, [pageNo, slotNo]):   (29,  [ 29 29 ] )
+28 (key, [pageNo, slotNo]):   (30,  [ 30 30 ] )
+29 (key, [pageNo, slotNo]):   (31,  [ 31 31 ] )
+30 (key, [pageNo, slotNo]):   (32,  [ 32 32 ] )
+31 (key, [pageNo, slotNo]):   (33,  [ 33 33 ] )
+32 (key, [pageNo, slotNo]):   (34,  [ 34 34 ] )
+33 (key, [pageNo, slotNo]):   (35,  [ 35 35 ] )
+34 (key, [pageNo, slotNo]):   (36,  [ 36 36 ] )
+35 (key, [pageNo, slotNo]):   (37,  [ 37 37 ] )
+36 (key, [pageNo, slotNo]):   (38,  [ 38 38 ] )
+37 (key, [pageNo, slotNo]):   (39,  [ 39 39 ] )
+38 (key, [pageNo, slotNo]):   (40,  [ 40 40 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 21
+Left Link      : 7
+Right Link     : 20
+0 (key, [pageNo, slotNo]):   (41,  [ 41 41 ] )
+1 (key, [pageNo, slotNo]):   (42,  [ 42 42 ] )
+2 (key, [pageNo, slotNo]):   (43,  [ 43 43 ] )
+3 (key, [pageNo, slotNo]):   (44,  [ 44 44 ] )
+4 (key, [pageNo, slotNo]):   (45,  [ 45 45 ] )
+5 (key, [pageNo, slotNo]):   (46,  [ 46 46 ] )
+6 (key, [pageNo, slotNo]):   (47,  [ 47 47 ] )
+7 (key, [pageNo, slotNo]):   (48,  [ 48 48 ] )
+8 (key, [pageNo, slotNo]):   (49,  [ 49 49 ] )
+9 (key, [pageNo, slotNo]):   (50,  [ 50 50 ] )
+10 (key, [pageNo, slotNo]):   (51,  [ 51 51 ] )
+11 (key, [pageNo, slotNo]):   (52,  [ 52 52 ] )
+12 (key, [pageNo, slotNo]):   (53,  [ 53 53 ] )
+13 (key, [pageNo, slotNo]):   (54,  [ 54 54 ] )
+14 (key, [pageNo, slotNo]):   (55,  [ 55 55 ] )
+15 (key, [pageNo, slotNo]):   (56,  [ 56 56 ] )
+16 (key, [pageNo, slotNo]):   (57,  [ 57 57 ] )
+17 (key, [pageNo, slotNo]):   (58,  [ 58 58 ] )
+18 (key, [pageNo, slotNo]):   (59,  [ 59 59 ] )
+19 (key, [pageNo, slotNo]):   (60,  [ 60 60 ] )
+20 (key, [pageNo, slotNo]):   (61,  [ 61 61 ] )
+21 (key, [pageNo, slotNo]):   (62,  [ 62 62 ] )
+22 (key, [pageNo, slotNo]):   (63,  [ 63 63 ] )
+23 (key, [pageNo, slotNo]):   (64,  [ 64 64 ] )
+24 (key, [pageNo, slotNo]):   (65,  [ 65 65 ] )
+25 (key, [pageNo, slotNo]):   (66,  [ 66 66 ] )
+26 (key, [pageNo, slotNo]):   (67,  [ 67 67 ] )
+27 (key, [pageNo, slotNo]):   (68,  [ 68 68 ] )
+28 (key, [pageNo, slotNo]):   (69,  [ 69 69 ] )
+29 (key, [pageNo, slotNo]):   (70,  [ 70 70 ] )
+30 (key, [pageNo, slotNo]):   (71,  [ 71 71 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 20
+Left Link      : 21
+Right Link     : 19
+0 (key, [pageNo, slotNo]):   (72,  [ 72 72 ] )
+1 (key, [pageNo, slotNo]):   (73,  [ 73 73 ] )
+2 (key, [pageNo, slotNo]):   (74,  [ 74 74 ] )
+3 (key, [pageNo, slotNo]):   (75,  [ 75 75 ] )
+4 (key, [pageNo, slotNo]):   (76,  [ 76 76 ] )
+5 (key, [pageNo, slotNo]):   (77,  [ 77 77 ] )
+6 (key, [pageNo, slotNo]):   (78,  [ 78 78 ] )
+7 (key, [pageNo, slotNo]):   (79,  [ 79 79 ] )
+8 (key, [pageNo, slotNo]):   (80,  [ 80 80 ] )
+9 (key, [pageNo, slotNo]):   (81,  [ 81 81 ] )
+10 (key, [pageNo, slotNo]):   (82,  [ 82 82 ] )
+11 (key, [pageNo, slotNo]):   (83,  [ 83 83 ] )
+12 (key, [pageNo, slotNo]):   (84,  [ 84 84 ] )
+13 (key, [pageNo, slotNo]):   (85,  [ 85 85 ] )
+14 (key, [pageNo, slotNo]):   (86,  [ 86 86 ] )
+15 (key, [pageNo, slotNo]):   (87,  [ 87 87 ] )
+16 (key, [pageNo, slotNo]):   (88,  [ 88 88 ] )
+17 (key, [pageNo, slotNo]):   (89,  [ 89 89 ] )
+18 (key, [pageNo, slotNo]):   (90,  [ 90 90 ] )
+19 (key, [pageNo, slotNo]):   (91,  [ 91 91 ] )
+20 (key, [pageNo, slotNo]):   (92,  [ 92 92 ] )
+21 (key, [pageNo, slotNo]):   (93,  [ 93 93 ] )
+22 (key, [pageNo, slotNo]):   (94,  [ 94 94 ] )
+23 (key, [pageNo, slotNo]):   (95,  [ 95 95 ] )
+24 (key, [pageNo, slotNo]):   (96,  [ 96 96 ] )
+25 (key, [pageNo, slotNo]):   (97,  [ 97 97 ] )
+26 (key, [pageNo, slotNo]):   (98,  [ 98 98 ] )
+27 (key, [pageNo, slotNo]):   (99,  [ 99 99 ] )
+28 (key, [pageNo, slotNo]):   (100,  [ 100 100 ] )
+29 (key, [pageNo, slotNo]):   (101,  [ 101 101 ] )
+30 (key, [pageNo, slotNo]):   (102,  [ 102 102 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 19
+Left Link      : 20
+Right Link     : 18
+0 (key, [pageNo, slotNo]):   (103,  [ 103 103 ] )
+1 (key, [pageNo, slotNo]):   (104,  [ 104 104 ] )
+2 (key, [pageNo, slotNo]):   (105,  [ 105 105 ] )
+3 (key, [pageNo, slotNo]):   (106,  [ 106 106 ] )
+4 (key, [pageNo, slotNo]):   (107,  [ 107 107 ] )
+5 (key, [pageNo, slotNo]):   (108,  [ 108 108 ] )
+6 (key, [pageNo, slotNo]):   (109,  [ 109 109 ] )
+7 (key, [pageNo, slotNo]):   (110,  [ 110 110 ] )
+8 (key, [pageNo, slotNo]):   (111,  [ 111 111 ] )
+9 (key, [pageNo, slotNo]):   (112,  [ 112 112 ] )
+10 (key, [pageNo, slotNo]):   (113,  [ 113 113 ] )
+11 (key, [pageNo, slotNo]):   (114,  [ 114 114 ] )
+12 (key, [pageNo, slotNo]):   (115,  [ 115 115 ] )
+13 (key, [pageNo, slotNo]):   (116,  [ 116 116 ] )
+14 (key, [pageNo, slotNo]):   (117,  [ 117 117 ] )
+15 (key, [pageNo, slotNo]):   (118,  [ 118 118 ] )
+16 (key, [pageNo, slotNo]):   (119,  [ 119 119 ] )
+17 (key, [pageNo, slotNo]):   (120,  [ 120 120 ] )
+18 (key, [pageNo, slotNo]):   (121,  [ 121 121 ] )
+19 (key, [pageNo, slotNo]):   (122,  [ 122 122 ] )
+20 (key, [pageNo, slotNo]):   (123,  [ 123 123 ] )
+21 (key, [pageNo, slotNo]):   (124,  [ 124 124 ] )
+22 (key, [pageNo, slotNo]):   (125,  [ 125 125 ] )
+23 (key, [pageNo, slotNo]):   (126,  [ 126 126 ] )
+24 (key, [pageNo, slotNo]):   (127,  [ 127 127 ] )
+25 (key, [pageNo, slotNo]):   (128,  [ 128 128 ] )
+26 (key, [pageNo, slotNo]):   (129,  [ 129 129 ] )
+27 (key, [pageNo, slotNo]):   (130,  [ 130 130 ] )
+28 (key, [pageNo, slotNo]):   (131,  [ 131 131 ] )
+29 (key, [pageNo, slotNo]):   (132,  [ 132 132 ] )
+30 (key, [pageNo, slotNo]):   (133,  [ 133 133 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 18
+Left Link      : 19
+Right Link     : 17
+0 (key, [pageNo, slotNo]):   (134,  [ 134 134 ] )
+1 (key, [pageNo, slotNo]):   (135,  [ 135 135 ] )
+2 (key, [pageNo, slotNo]):   (136,  [ 136 136 ] )
+3 (key, [pageNo, slotNo]):   (137,  [ 137 137 ] )
+4 (key, [pageNo, slotNo]):   (138,  [ 138 138 ] )
+5 (key, [pageNo, slotNo]):   (139,  [ 139 139 ] )
+6 (key, [pageNo, slotNo]):   (140,  [ 140 140 ] )
+7 (key, [pageNo, slotNo]):   (141,  [ 141 141 ] )
+8 (key, [pageNo, slotNo]):   (142,  [ 142 142 ] )
+9 (key, [pageNo, slotNo]):   (143,  [ 143 143 ] )
+10 (key, [pageNo, slotNo]):   (144,  [ 144 144 ] )
+11 (key, [pageNo, slotNo]):   (145,  [ 145 145 ] )
+12 (key, [pageNo, slotNo]):   (146,  [ 146 146 ] )
+13 (key, [pageNo, slotNo]):   (147,  [ 147 147 ] )
+14 (key, [pageNo, slotNo]):   (148,  [ 148 148 ] )
+15 (key, [pageNo, slotNo]):   (149,  [ 149 149 ] )
+16 (key, [pageNo, slotNo]):   (150,  [ 150 150 ] )
+17 (key, [pageNo, slotNo]):   (151,  [ 151 151 ] )
+18 (key, [pageNo, slotNo]):   (152,  [ 152 152 ] )
+19 (key, [pageNo, slotNo]):   (153,  [ 153 153 ] )
+20 (key, [pageNo, slotNo]):   (154,  [ 154 154 ] )
+21 (key, [pageNo, slotNo]):   (155,  [ 155 155 ] )
+22 (key, [pageNo, slotNo]):   (156,  [ 156 156 ] )
+23 (key, [pageNo, slotNo]):   (157,  [ 157 157 ] )
+24 (key, [pageNo, slotNo]):   (158,  [ 158 158 ] )
+25 (key, [pageNo, slotNo]):   (159,  [ 159 159 ] )
+26 (key, [pageNo, slotNo]):   (160,  [ 160 160 ] )
+27 (key, [pageNo, slotNo]):   (161,  [ 161 161 ] )
+28 (key, [pageNo, slotNo]):   (162,  [ 162 162 ] )
+29 (key, [pageNo, slotNo]):   (163,  [ 163 163 ] )
+30 (key, [pageNo, slotNo]):   (164,  [ 164 164 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 17
+Left Link      : 18
+Right Link     : 16
+0 (key, [pageNo, slotNo]):   (165,  [ 165 165 ] )
+1 (key, [pageNo, slotNo]):   (166,  [ 166 166 ] )
+2 (key, [pageNo, slotNo]):   (167,  [ 167 167 ] )
+3 (key, [pageNo, slotNo]):   (168,  [ 168 168 ] )
+4 (key, [pageNo, slotNo]):   (169,  [ 169 169 ] )
+5 (key, [pageNo, slotNo]):   (170,  [ 170 170 ] )
+6 (key, [pageNo, slotNo]):   (171,  [ 171 171 ] )
+7 (key, [pageNo, slotNo]):   (172,  [ 172 172 ] )
+8 (key, [pageNo, slotNo]):   (173,  [ 173 173 ] )
+9 (key, [pageNo, slotNo]):   (174,  [ 174 174 ] )
+10 (key, [pageNo, slotNo]):   (175,  [ 175 175 ] )
+11 (key, [pageNo, slotNo]):   (176,  [ 176 176 ] )
+12 (key, [pageNo, slotNo]):   (177,  [ 177 177 ] )
+13 (key, [pageNo, slotNo]):   (178,  [ 178 178 ] )
+14 (key, [pageNo, slotNo]):   (179,  [ 179 179 ] )
+15 (key, [pageNo, slotNo]):   (180,  [ 180 180 ] )
+16 (key, [pageNo, slotNo]):   (181,  [ 181 181 ] )
+17 (key, [pageNo, slotNo]):   (182,  [ 182 182 ] )
+18 (key, [pageNo, slotNo]):   (183,  [ 183 183 ] )
+19 (key, [pageNo, slotNo]):   (184,  [ 184 184 ] )
+20 (key, [pageNo, slotNo]):   (185,  [ 185 185 ] )
+21 (key, [pageNo, slotNo]):   (186,  [ 186 186 ] )
+22 (key, [pageNo, slotNo]):   (187,  [ 187 187 ] )
+23 (key, [pageNo, slotNo]):   (188,  [ 188 188 ] )
+24 (key, [pageNo, slotNo]):   (189,  [ 189 189 ] )
+25 (key, [pageNo, slotNo]):   (190,  [ 190 190 ] )
+26 (key, [pageNo, slotNo]):   (191,  [ 191 191 ] )
+27 (key, [pageNo, slotNo]):   (192,  [ 192 192 ] )
+28 (key, [pageNo, slotNo]):   (193,  [ 193 193 ] )
+29 (key, [pageNo, slotNo]):   (194,  [ 194 194 ] )
+30 (key, [pageNo, slotNo]):   (195,  [ 195 195 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 16
+Left Link      : 17
+Right Link     : 15
+0 (key, [pageNo, slotNo]):   (196,  [ 196 196 ] )
+1 (key, [pageNo, slotNo]):   (197,  [ 197 197 ] )
+2 (key, [pageNo, slotNo]):   (198,  [ 198 198 ] )
+3 (key, [pageNo, slotNo]):   (199,  [ 199 199 ] )
+4 (key, [pageNo, slotNo]):   (200,  [ 200 200 ] )
+5 (key, [pageNo, slotNo]):   (201,  [ 201 201 ] )
+6 (key, [pageNo, slotNo]):   (202,  [ 202 202 ] )
+7 (key, [pageNo, slotNo]):   (203,  [ 203 203 ] )
+8 (key, [pageNo, slotNo]):   (204,  [ 204 204 ] )
+9 (key, [pageNo, slotNo]):   (205,  [ 205 205 ] )
+10 (key, [pageNo, slotNo]):   (206,  [ 206 206 ] )
+11 (key, [pageNo, slotNo]):   (207,  [ 207 207 ] )
+12 (key, [pageNo, slotNo]):   (208,  [ 208 208 ] )
+13 (key, [pageNo, slotNo]):   (209,  [ 209 209 ] )
+14 (key, [pageNo, slotNo]):   (210,  [ 210 210 ] )
+15 (key, [pageNo, slotNo]):   (211,  [ 211 211 ] )
+16 (key, [pageNo, slotNo]):   (212,  [ 212 212 ] )
+17 (key, [pageNo, slotNo]):   (213,  [ 213 213 ] )
+18 (key, [pageNo, slotNo]):   (214,  [ 214 214 ] )
+19 (key, [pageNo, slotNo]):   (215,  [ 215 215 ] )
+20 (key, [pageNo, slotNo]):   (216,  [ 216 216 ] )
+21 (key, [pageNo, slotNo]):   (217,  [ 217 217 ] )
+22 (key, [pageNo, slotNo]):   (218,  [ 218 218 ] )
+23 (key, [pageNo, slotNo]):   (219,  [ 219 219 ] )
+24 (key, [pageNo, slotNo]):   (220,  [ 220 220 ] )
+25 (key, [pageNo, slotNo]):   (221,  [ 221 221 ] )
+26 (key, [pageNo, slotNo]):   (222,  [ 222 222 ] )
+27 (key, [pageNo, slotNo]):   (223,  [ 223 223 ] )
+28 (key, [pageNo, slotNo]):   (224,  [ 224 224 ] )
+29 (key, [pageNo, slotNo]):   (225,  [ 225 225 ] )
+30 (key, [pageNo, slotNo]):   (226,  [ 226 226 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 15
+Left Link      : 16
+Right Link     : 14
+0 (key, [pageNo, slotNo]):   (227,  [ 227 227 ] )
+1 (key, [pageNo, slotNo]):   (228,  [ 228 228 ] )
+2 (key, [pageNo, slotNo]):   (229,  [ 229 229 ] )
+3 (key, [pageNo, slotNo]):   (230,  [ 230 230 ] )
+4 (key, [pageNo, slotNo]):   (231,  [ 231 231 ] )
+5 (key, [pageNo, slotNo]):   (232,  [ 232 232 ] )
+6 (key, [pageNo, slotNo]):   (233,  [ 233 233 ] )
+7 (key, [pageNo, slotNo]):   (234,  [ 234 234 ] )
+8 (key, [pageNo, slotNo]):   (235,  [ 235 235 ] )
+9 (key, [pageNo, slotNo]):   (236,  [ 236 236 ] )
+10 (key, [pageNo, slotNo]):   (237,  [ 237 237 ] )
+11 (key, [pageNo, slotNo]):   (238,  [ 238 238 ] )
+12 (key, [pageNo, slotNo]):   (239,  [ 239 239 ] )
+13 (key, [pageNo, slotNo]):   (240,  [ 240 240 ] )
+14 (key, [pageNo, slotNo]):   (241,  [ 241 241 ] )
+15 (key, [pageNo, slotNo]):   (242,  [ 242 242 ] )
+16 (key, [pageNo, slotNo]):   (243,  [ 243 243 ] )
+17 (key, [pageNo, slotNo]):   (244,  [ 244 244 ] )
+18 (key, [pageNo, slotNo]):   (245,  [ 245 245 ] )
+19 (key, [pageNo, slotNo]):   (246,  [ 246 246 ] )
+20 (key, [pageNo, slotNo]):   (247,  [ 247 247 ] )
+21 (key, [pageNo, slotNo]):   (248,  [ 248 248 ] )
+22 (key, [pageNo, slotNo]):   (249,  [ 249 249 ] )
+23 (key, [pageNo, slotNo]):   (250,  [ 250 250 ] )
+24 (key, [pageNo, slotNo]):   (251,  [ 251 251 ] )
+25 (key, [pageNo, slotNo]):   (252,  [ 252 252 ] )
+26 (key, [pageNo, slotNo]):   (253,  [ 253 253 ] )
+27 (key, [pageNo, slotNo]):   (254,  [ 254 254 ] )
+28 (key, [pageNo, slotNo]):   (255,  [ 255 255 ] )
+29 (key, [pageNo, slotNo]):   (256,  [ 256 256 ] )
+30 (key, [pageNo, slotNo]):   (257,  [ 257 257 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 14
+Left Link      : 15
+Right Link     : 13
+0 (key, [pageNo, slotNo]):   (258,  [ 258 258 ] )
+1 (key, [pageNo, slotNo]):   (259,  [ 259 259 ] )
+2 (key, [pageNo, slotNo]):   (260,  [ 260 260 ] )
+3 (key, [pageNo, slotNo]):   (261,  [ 261 261 ] )
+4 (key, [pageNo, slotNo]):   (262,  [ 262 262 ] )
+5 (key, [pageNo, slotNo]):   (263,  [ 263 263 ] )
+6 (key, [pageNo, slotNo]):   (264,  [ 264 264 ] )
+7 (key, [pageNo, slotNo]):   (265,  [ 265 265 ] )
+8 (key, [pageNo, slotNo]):   (266,  [ 266 266 ] )
+9 (key, [pageNo, slotNo]):   (267,  [ 267 267 ] )
+10 (key, [pageNo, slotNo]):   (268,  [ 268 268 ] )
+11 (key, [pageNo, slotNo]):   (269,  [ 269 269 ] )
+12 (key, [pageNo, slotNo]):   (270,  [ 270 270 ] )
+13 (key, [pageNo, slotNo]):   (271,  [ 271 271 ] )
+14 (key, [pageNo, slotNo]):   (272,  [ 272 272 ] )
+15 (key, [pageNo, slotNo]):   (273,  [ 273 273 ] )
+16 (key, [pageNo, slotNo]):   (274,  [ 274 274 ] )
+17 (key, [pageNo, slotNo]):   (275,  [ 275 275 ] )
+18 (key, [pageNo, slotNo]):   (276,  [ 276 276 ] )
+19 (key, [pageNo, slotNo]):   (277,  [ 277 277 ] )
+20 (key, [pageNo, slotNo]):   (278,  [ 278 278 ] )
+21 (key, [pageNo, slotNo]):   (279,  [ 279 279 ] )
+22 (key, [pageNo, slotNo]):   (280,  [ 280 280 ] )
+23 (key, [pageNo, slotNo]):   (281,  [ 281 281 ] )
+24 (key, [pageNo, slotNo]):   (282,  [ 282 282 ] )
+25 (key, [pageNo, slotNo]):   (283,  [ 283 283 ] )
+26 (key, [pageNo, slotNo]):   (284,  [ 284 284 ] )
+27 (key, [pageNo, slotNo]):   (285,  [ 285 285 ] )
+28 (key, [pageNo, slotNo]):   (286,  [ 286 286 ] )
+29 (key, [pageNo, slotNo]):   (287,  [ 287 287 ] )
+30 (key, [pageNo, slotNo]):   (288,  [ 288 288 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 13
+Left Link      : 14
+Right Link     : 12
+0 (key, [pageNo, slotNo]):   (289,  [ 289 289 ] )
+1 (key, [pageNo, slotNo]):   (290,  [ 290 290 ] )
+2 (key, [pageNo, slotNo]):   (291,  [ 291 291 ] )
+3 (key, [pageNo, slotNo]):   (292,  [ 292 292 ] )
+4 (key, [pageNo, slotNo]):   (293,  [ 293 293 ] )
+5 (key, [pageNo, slotNo]):   (294,  [ 294 294 ] )
+6 (key, [pageNo, slotNo]):   (295,  [ 295 295 ] )
+7 (key, [pageNo, slotNo]):   (296,  [ 296 296 ] )
+8 (key, [pageNo, slotNo]):   (297,  [ 297 297 ] )
+9 (key, [pageNo, slotNo]):   (298,  [ 298 298 ] )
+10 (key, [pageNo, slotNo]):   (299,  [ 299 299 ] )
+11 (key, [pageNo, slotNo]):   (300,  [ 300 300 ] )
+12 (key, [pageNo, slotNo]):   (301,  [ 301 301 ] )
+13 (key, [pageNo, slotNo]):   (302,  [ 302 302 ] )
+14 (key, [pageNo, slotNo]):   (303,  [ 303 303 ] )
+15 (key, [pageNo, slotNo]):   (304,  [ 304 304 ] )
+16 (key, [pageNo, slotNo]):   (305,  [ 305 305 ] )
+17 (key, [pageNo, slotNo]):   (306,  [ 306 306 ] )
+18 (key, [pageNo, slotNo]):   (307,  [ 307 307 ] )
+19 (key, [pageNo, slotNo]):   (308,  [ 308 308 ] )
+20 (key, [pageNo, slotNo]):   (309,  [ 309 309 ] )
+21 (key, [pageNo, slotNo]):   (310,  [ 310 310 ] )
+22 (key, [pageNo, slotNo]):   (311,  [ 311 311 ] )
+23 (key, [pageNo, slotNo]):   (312,  [ 312 312 ] )
+24 (key, [pageNo, slotNo]):   (313,  [ 313 313 ] )
+25 (key, [pageNo, slotNo]):   (314,  [ 314 314 ] )
+26 (key, [pageNo, slotNo]):   (315,  [ 315 315 ] )
+27 (key, [pageNo, slotNo]):   (316,  [ 316 316 ] )
+28 (key, [pageNo, slotNo]):   (317,  [ 317 317 ] )
+29 (key, [pageNo, slotNo]):   (318,  [ 318 318 ] )
+30 (key, [pageNo, slotNo]):   (319,  [ 319 319 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 12
+Left Link      : 13
+Right Link     : 11
+0 (key, [pageNo, slotNo]):   (320,  [ 320 320 ] )
+1 (key, [pageNo, slotNo]):   (321,  [ 321 321 ] )
+2 (key, [pageNo, slotNo]):   (322,  [ 322 322 ] )
+3 (key, [pageNo, slotNo]):   (323,  [ 323 323 ] )
+4 (key, [pageNo, slotNo]):   (324,  [ 324 324 ] )
+5 (key, [pageNo, slotNo]):   (325,  [ 325 325 ] )
+6 (key, [pageNo, slotNo]):   (326,  [ 326 326 ] )
+7 (key, [pageNo, slotNo]):   (327,  [ 327 327 ] )
+8 (key, [pageNo, slotNo]):   (328,  [ 328 328 ] )
+9 (key, [pageNo, slotNo]):   (329,  [ 329 329 ] )
+10 (key, [pageNo, slotNo]):   (330,  [ 330 330 ] )
+11 (key, [pageNo, slotNo]):   (331,  [ 331 331 ] )
+12 (key, [pageNo, slotNo]):   (332,  [ 332 332 ] )
+13 (key, [pageNo, slotNo]):   (333,  [ 333 333 ] )
+14 (key, [pageNo, slotNo]):   (334,  [ 334 334 ] )
+15 (key, [pageNo, slotNo]):   (335,  [ 335 335 ] )
+16 (key, [pageNo, slotNo]):   (336,  [ 336 336 ] )
+17 (key, [pageNo, slotNo]):   (337,  [ 337 337 ] )
+18 (key, [pageNo, slotNo]):   (338,  [ 338 338 ] )
+19 (key, [pageNo, slotNo]):   (339,  [ 339 339 ] )
+20 (key, [pageNo, slotNo]):   (340,  [ 340 340 ] )
+21 (key, [pageNo, slotNo]):   (341,  [ 341 341 ] )
+22 (key, [pageNo, slotNo]):   (342,  [ 342 342 ] )
+23 (key, [pageNo, slotNo]):   (343,  [ 343 343 ] )
+24 (key, [pageNo, slotNo]):   (344,  [ 344 344 ] )
+25 (key, [pageNo, slotNo]):   (345,  [ 345 345 ] )
+26 (key, [pageNo, slotNo]):   (346,  [ 346 346 ] )
+27 (key, [pageNo, slotNo]):   (347,  [ 347 347 ] )
+28 (key, [pageNo, slotNo]):   (348,  [ 348 348 ] )
+29 (key, [pageNo, slotNo]):   (349,  [ 349 349 ] )
+30 (key, [pageNo, slotNo]):   (350,  [ 350 350 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 11
+Left Link      : 12
+Right Link     : 10
+0 (key, [pageNo, slotNo]):   (351,  [ 351 351 ] )
+1 (key, [pageNo, slotNo]):   (352,  [ 352 352 ] )
+2 (key, [pageNo, slotNo]):   (353,  [ 353 353 ] )
+3 (key, [pageNo, slotNo]):   (354,  [ 354 354 ] )
+4 (key, [pageNo, slotNo]):   (355,  [ 355 355 ] )
+5 (key, [pageNo, slotNo]):   (356,  [ 356 356 ] )
+6 (key, [pageNo, slotNo]):   (357,  [ 357 357 ] )
+7 (key, [pageNo, slotNo]):   (358,  [ 358 358 ] )
+8 (key, [pageNo, slotNo]):   (359,  [ 359 359 ] )
+9 (key, [pageNo, slotNo]):   (360,  [ 360 360 ] )
+10 (key, [pageNo, slotNo]):   (361,  [ 361 361 ] )
+11 (key, [pageNo, slotNo]):   (362,  [ 362 362 ] )
+12 (key, [pageNo, slotNo]):   (363,  [ 363 363 ] )
+13 (key, [pageNo, slotNo]):   (364,  [ 364 364 ] )
+14 (key, [pageNo, slotNo]):   (365,  [ 365 365 ] )
+15 (key, [pageNo, slotNo]):   (366,  [ 366 366 ] )
+16 (key, [pageNo, slotNo]):   (367,  [ 367 367 ] )
+17 (key, [pageNo, slotNo]):   (368,  [ 368 368 ] )
+18 (key, [pageNo, slotNo]):   (369,  [ 369 369 ] )
+19 (key, [pageNo, slotNo]):   (370,  [ 370 370 ] )
+20 (key, [pageNo, slotNo]):   (371,  [ 371 371 ] )
+21 (key, [pageNo, slotNo]):   (372,  [ 372 372 ] )
+22 (key, [pageNo, slotNo]):   (373,  [ 373 373 ] )
+23 (key, [pageNo, slotNo]):   (374,  [ 374 374 ] )
+24 (key, [pageNo, slotNo]):   (375,  [ 375 375 ] )
+25 (key, [pageNo, slotNo]):   (376,  [ 376 376 ] )
+26 (key, [pageNo, slotNo]):   (377,  [ 377 377 ] )
+27 (key, [pageNo, slotNo]):   (378,  [ 378 378 ] )
+28 (key, [pageNo, slotNo]):   (379,  [ 379 379 ] )
+29 (key, [pageNo, slotNo]):   (380,  [ 380 380 ] )
+30 (key, [pageNo, slotNo]):   (381,  [ 381 381 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 10
+Left Link      : 11
+Right Link     : 8
+0 (key, [pageNo, slotNo]):   (382,  [ 382 382 ] )
+1 (key, [pageNo, slotNo]):   (383,  [ 383 383 ] )
+2 (key, [pageNo, slotNo]):   (384,  [ 384 384 ] )
+3 (key, [pageNo, slotNo]):   (385,  [ 385 385 ] )
+4 (key, [pageNo, slotNo]):   (386,  [ 386 386 ] )
+5 (key, [pageNo, slotNo]):   (387,  [ 387 387 ] )
+6 (key, [pageNo, slotNo]):   (388,  [ 388 388 ] )
+7 (key, [pageNo, slotNo]):   (389,  [ 389 389 ] )
+8 (key, [pageNo, slotNo]):   (390,  [ 390 390 ] )
+9 (key, [pageNo, slotNo]):   (391,  [ 391 391 ] )
+10 (key, [pageNo, slotNo]):   (392,  [ 392 392 ] )
+11 (key, [pageNo, slotNo]):   (393,  [ 393 393 ] )
+12 (key, [pageNo, slotNo]):   (394,  [ 394 394 ] )
+13 (key, [pageNo, slotNo]):   (395,  [ 395 395 ] )
+14 (key, [pageNo, slotNo]):   (396,  [ 396 396 ] )
+15 (key, [pageNo, slotNo]):   (397,  [ 397 397 ] )
+16 (key, [pageNo, slotNo]):   (398,  [ 398 398 ] )
+17 (key, [pageNo, slotNo]):   (399,  [ 399 399 ] )
+18 (key, [pageNo, slotNo]):   (400,  [ 400 400 ] )
+19 (key, [pageNo, slotNo]):   (401,  [ 401 401 ] )
+20 (key, [pageNo, slotNo]):   (402,  [ 402 402 ] )
+21 (key, [pageNo, slotNo]):   (403,  [ 403 403 ] )
+22 (key, [pageNo, slotNo]):   (404,  [ 404 404 ] )
+23 (key, [pageNo, slotNo]):   (405,  [ 405 405 ] )
+24 (key, [pageNo, slotNo]):   (406,  [ 406 406 ] )
+25 (key, [pageNo, slotNo]):   (407,  [ 407 407 ] )
+26 (key, [pageNo, slotNo]):   (408,  [ 408 408 ] )
+27 (key, [pageNo, slotNo]):   (409,  [ 409 409 ] )
+28 (key, [pageNo, slotNo]):   (410,  [ 410 410 ] )
+29 (key, [pageNo, slotNo]):   (411,  [ 411 411 ] )
+30 (key, [pageNo, slotNo]):   (412,  [ 412 412 ] )
+************** END ********
+
+
+**************To Print an Leaf Page ********
+Current Page ID: 8
+Left Link      : 10
+Right Link     : -1
+0 (key, [pageNo, slotNo]):   (413,  [ 413 413 ] )
+1 (key, [pageNo, slotNo]):   (414,  [ 414 414 ] )
+2 (key, [pageNo, slotNo]):   (415,  [ 415 415 ] )
+3 (key, [pageNo, slotNo]):   (416,  [ 416 416 ] )
+4 (key, [pageNo, slotNo]):   (417,  [ 417 417 ] )
+5 (key, [pageNo, slotNo]):   (418,  [ 418 418 ] )
+6 (key, [pageNo, slotNo]):   (419,  [ 419 419 ] )
+7 (key, [pageNo, slotNo]):   (420,  [ 420 420 ] )
+8 (key, [pageNo, slotNo]):   (421,  [ 421 421 ] )
+9 (key, [pageNo, slotNo]):   (422,  [ 422 422 ] )
+10 (key, [pageNo, slotNo]):   (423,  [ 423 423 ] )
+11 (key, [pageNo, slotNo]):   (424,  [ 424 424 ] )
+12 (key, [pageNo, slotNo]):   (425,  [ 425 425 ] )
+13 (key, [pageNo, slotNo]):   (426,  [ 426 426 ] )
+14 (key, [pageNo, slotNo]):   (427,  [ 427 427 ] )
+15 (key, [pageNo, slotNo]):   (428,  [ 428 428 ] )
+16 (key, [pageNo, slotNo]):   (429,  [ 429 429 ] )
+17 (key, [pageNo, slotNo]):   (430,  [ 430 430 ] )
+18 (key, [pageNo, slotNo]):   (431,  [ 431 431 ] )
+19 (key, [pageNo, slotNo]):   (432,  [ 432 432 ] )
+20 (key, [pageNo, slotNo]):   (433,  [ 433 433 ] )
+21 (key, [pageNo, slotNo]):   (434,  [ 434 434 ] )
+22 (key, [pageNo, slotNo]):   (435,  [ 435 435 ] )
+23 (key, [pageNo, slotNo]):   (436,  [ 436 436 ] )
+24 (key, [pageNo, slotNo]):   (437,  [ 437 437 ] )
+25 (key, [pageNo, slotNo]):   (438,  [ 438 438 ] )
+26 (key, [pageNo, slotNo]):   (439,  [ 439 439 ] )
+27 (key, [pageNo, slotNo]):   (440,  [ 440 440 ] )
+28 (key, [pageNo, slotNo]):   (441,  [ 441 441 ] )
+29 (key, [pageNo, slotNo]):   (442,  [ 442 442 ] )
+30 (key, [pageNo, slotNo]):   (443,  [ 443 443 ] )
+************** END ********
+
+
+
+------------- All Leaf Pages Have Been Printed --------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :8
+Please input the number of keys to insert: 
+2
+ ***************** The file name is: AAA3  **********
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2
+
+
+
+---------------The B+ Tree Structure---------------
+1     23
+--------------- End ---------------
+
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :2 4
+Please input the page number: 
+8
+
+**************To Print an Leaf Page ********
+Current Page ID: 8
+Left Link      : 10
+Right Link     : -1
+0 (key, [pageNo, slotNo]):   (413,  [ 413 413 ] )
+1 (key, [pageNo, slotNo]):   (414,  [ 414 414 ] )
+2 (key, [pageNo, slotNo]):   (415,  [ 415 415 ] )
+3 (key, [pageNo, slotNo]):   (416,  [ 416 416 ] )
+4 (key, [pageNo, slotNo]):   (417,  [ 417 417 ] )
+5 (key, [pageNo, slotNo]):   (418,  [ 418 418 ] )
+6 (key, [pageNo, slotNo]):   (419,  [ 419 419 ] )
+7 (key, [pageNo, slotNo]):   (420,  [ 420 420 ] )
+8 (key, [pageNo, slotNo]):   (421,  [ 421 421 ] )
+9 (key, [pageNo, slotNo]):   (422,  [ 422 422 ] )
+10 (key, [pageNo, slotNo]):   (423,  [ 423 423 ] )
+11 (key, [pageNo, slotNo]):   (424,  [ 424 424 ] )
+12 (key, [pageNo, slotNo]):   (425,  [ 425 425 ] )
+13 (key, [pageNo, slotNo]):   (426,  [ 426 426 ] )
+14 (key, [pageNo, slotNo]):   (427,  [ 427 427 ] )
+15 (key, [pageNo, slotNo]):   (428,  [ 428 428 ] )
+16 (key, [pageNo, slotNo]):   (429,  [ 429 429 ] )
+17 (key, [pageNo, slotNo]):   (430,  [ 430 430 ] )
+18 (key, [pageNo, slotNo]):   (431,  [ 431 431 ] )
+19 (key, [pageNo, slotNo]):   (432,  [ 432 432 ] )
+20 (key, [pageNo, slotNo]):   (433,  [ 433 433 ] )
+21 (key, [pageNo, slotNo]):   (434,  [ 434 434 ] )
+22 (key, [pageNo, slotNo]):   (435,  [ 435 435 ] )
+23 (key, [pageNo, slotNo]):   (436,  [ 436 436 ] )
+24 (key, [pageNo, slotNo]):   (437,  [ 437 437 ] )
+25 (key, [pageNo, slotNo]):   (438,  [ 438 438 ] )
+26 (key, [pageNo, slotNo]):   (439,  [ 439 439 ] )
+27 (key, [pageNo, slotNo]):   (440,  [ 440 440 ] )
+28 (key, [pageNo, slotNo]):   (441,  [ 441 441 ] )
+29 (key, [pageNo, slotNo]):   (442,  [ 442 442 ] )
+30 (key, [pageNo, slotNo]):   (443,  [ 443 443 ] )
+************** END ********
+
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :16
+ ***************** You close the file: AAA3  **********
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :17
+
+ ***************** You open the file: AAA-1  **********
+btree.ConstructPageException: pinpage failed
+java.lang.NullPointerException
+	at bufmgr.BufHashTbl.lookup(BufMgr.java:158)
+	at bufmgr.BufMgr.pinPage(BufMgr.java:499)
+	at btree.BTreeHeaderPage.<init>(BTreeHeaderPage.java:131)
+	at btree.BTreeFile.<init>(BTreeFile.java:180)
+	at tests.BTDriver.runAllTests(BTTest.java:300)
+	at tests.BTDriver.runTests(BTTest.java:80)
+	at tests.BTTest.main(BTTest.java:648)
+       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+       !!         Something is wrong                    !!
+       !!     Is your DB full? then exit. rerun it!     !!
+       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :17
+2
+ ***************** You open the file: AAA2  **********
+-------------------------- MENU ------------------
+
+
+[0]   Naive delete (new file)
+[1]   Full delete(Default) (new file)
+
+[2]   Print the B+ Tree Structure
+[3]   Print All Leaf Pages
+[4]   Choose a Page to Print
+
+           ---Integer Key (for choices [6]-[14]) ---
+
+[5]   Insert a Record
+[6]   Delete a Record
+[7]   Test1 (new file): insert n records in order
+[8]   Test2 (new file): insert n records in reverse order
+[9]   Test3 (new file): insert n records in random order
+[10]  Test4 (new file): insert n records in random order
+      and delete m records randomly
+[11]  Delete some records
+
+[12]  Initialize a Scan
+[13]  Scan the next Record
+[14]  Delete the just-scanned record
+
+           ---String Key (for choice [15]) ---
+
+[15]  Test5 (new file): insert n records in random order  
+        and delete m records randomly.
+
+[16]  Close the file
+[17]  Open which file (input an integer for the file name): 
+[18]  Destroy which file (input an integer for the file name): 
+
+[19]  Quit!
+Hi, make your choice :19
+
+... Finished .
+
+
+/usr/lib/jvm/java-7-openjdk-i386/bin/javac -classpath .:.. TestDriver.java IndexTest.java
+/usr/lib/jvm/java-7-openjdk-i386/bin/java  -classpath .:.. tests.IndexTest
+
+Running Index tests....
+
+Replacer: Clock
+
+------------------------ TEST 1 --------------------------
+BTreeIndex created successfully.
+
+BTreeIndex file created successfully.
+
+Test1 -- Index Scan OK
+------------------- TEST 1 completed ---------------------
+
+------------------------ TEST 2 --------------------------
+BTreeIndex opened successfully.
+
+Test2 -- Index Scan OK
+------------------- TEST 2 completed ---------------------
+
+------------------------ TEST 3 --------------------------
+BTreeIndex created successfully.
+
+BTreeIndex file created successfully.
+
+Test3 -- Index scan on int key OK
+
+------------------- TEST 3 completed ---------------------
+
+
+...Index tests 
+completely successfully
+.
+
+
+Index tests completed successfully
+/usr/lib/jvm/java-7-openjdk-i386/bin/javac -classpath .:.. TestDriver.java JoinTest.java
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+/usr/lib/jvm/java-7-openjdk-i386/bin/java  -classpath .:.. tests.JoinTest
+Replacer: Clock
+
+
+
+Any resemblance of persons in this database to people living or dead
+is purely coincidental. The contents of this database do not reflect
+the views of the University, the Computer  Sciences Department or the
+developers...
+
+**********************Query1 strating *********************
+Query: Find the names of sailors who have reserved boat number 1.
+       and print out the date of reservation.
+
+  SELECT S.sname, R.date
+  FROM   Sailors S, Reserves R
+  WHERE  S.sid = R.sid AND R.bid = 1
+
+
+(Tests FileScan, Projection, and Sort-Merge Join)
+[Mike Carey, 05/10/95]
+[David Dewitt, 05/11/95]
+[Jeff Naughton, 05/12/95]
+
+Query1 completed successfully!
+*******************Query1 finished!!!*****************
+
+
+
+**********************Query2 strating *********************
+Query: Find the names of sailors who have reserved a red boat
+       and return them in alphabetical order.
+
+  SELECT   S.sname
+  FROM     Sailors S, Boats B, Reserves R
+  WHERE    S.sid = R.sid AND R.bid = B.bid AND B.color = 'red'
+  ORDER BY S.sname
+Plan used:
+ Sort (Pi(sname) (Sigma(B.color='red')  |><|  Pi(sname, bid) (S  |><|  R)))
+
+(Tests File scan, Index scan ,Projection,  index selection,
+ sort and simple nested-loop join.)
+
+After Building btree index on sailors.sid.
+
+[David Dewitt]
+[Mike Carey]
+[Raghu Ramakrishnan]
+[Yannis Ioannidis]
+
+Query2 completed successfully!
+*******************Query2 finished!!!*****************
+
+
+
+**********************Query3 strating *********************
+Query: Find the names of sailors who have reserved a boat.
+
+  SELECT S.sname
+  FROM   Sailors S, Reserves R
+  WHERE  S.sid = R.sid
+
+(Tests FileScan, Projection, and SortMerge Join.)
+
+[Mike Carey]
+[Mike Carey]
+[Mike Carey]
+[David Dewitt]
+[David Dewitt]
+[Jeff Naughton]
+[Miron Livny]
+[Yannis Ioannidis]
+[Raghu Ramakrishnan]
+[Raghu Ramakrishnan]
+
+Query3 completed successfully!
+*******************Query3 finished!!!*****************
+
+
+
+**********************Query4 strating *********************
+Query: Find the names of sailors who have reserved a boat
+       and print each name once.
+
+  SELECT DISTINCT S.sname
+  FROM   Sailors S, Reserves R
+  WHERE  S.sid = R.sid
+
+(Tests FileScan, Projection, Sort-Merge Join and Duplication elimination.)
+
+[David Dewitt]
+[Jeff Naughton]
+[Mike Carey]
+[Miron Livny]
+[Raghu Ramakrishnan]
+[Yannis Ioannidis]
+
+Query4 completed successfully!
+*******************Query4 finished!!!*****************
+
+
+
+**********************Query5 strating *********************
+Query: Find the names of old sailors or sailors with a rating less
+       than 7, who have reserved a boat, (perhaps to increase the
+       amount they have to pay to make a reservation).
+
+  SELECT S.sname, S.rating, S.age
+  FROM   Sailors S, Reserves R
+  WHERE  S.sid = R.sid and (S.age > 40 || S.rating < 7)
+
+(Tests FileScan, Multiple Selection, Projection, and Sort-Merge Join.)
+
+[Mike Carey, 9, 40.3]
+[Mike Carey, 9, 40.3]
+[Mike Carey, 9, 40.3]
+[David Dewitt, 10, 47.2]
+[David Dewitt, 10, 47.2]
+[Jeff Naughton, 5, 35.0]
+[Yannis Ioannidis, 8, 40.2]
+
+Query5 completed successfully!
+*******************Query5 finished!!!*****************
+
+
+
+**********************Query6 strating *********************
+Query: Find the names of sailors with a rating greater than 7
+  who have reserved a red boat, and print them out in sorted order.
+
+  SELECT   S.sname
+  FROM     Sailors S, Boats B, Reserves R
+  WHERE    S.sid = R.sid AND S.rating > 7 AND R.bid = B.bid 
+           AND B.color = 'red'
+  ORDER BY S.name
+
+Plan used:
+ Sort(Pi(sname) (Sigma(B.color='red')  |><|  Pi(sname, bid) (Sigma(S.rating > 7)  |><|  R)))
+
+(Tests FileScan, Multiple Selection, Projection,sort and nested-loop join.)
+
+After nested loop join S.sid|><|R.sid.
+After nested loop join R.bid|><|B.bid AND B.color=red.
+After sorting the output tuples.
+[David Dewitt]
+[Mike Carey]
+[Raghu Ramakrishnan]
+[Yannis Ioannidis]
+
+Query6 completed successfully!
+*******************Query6 finished!!!*****************
+
+
+
+Finished joins testing
+join tests completed successfully
+/usr/lib/jvm/java-7-openjdk-i386/bin/javac -classpath .:.. TestDriver.java SortTest.java
+/usr/lib/jvm/java-7-openjdk-i386/bin/java  -classpath .:.. tests.SortTest
+
+Running Sort tests....
+
+Replacer: Clock
+
+------------------------ TEST 1 --------------------------
+Test1 -- Sorting OK
+------------------- TEST 1 completed ---------------------
+
+------------------------ TEST 2 --------------------------
+Test2 -- Sorting OK
+------------------- TEST 2 completed ---------------------
+
+------------------------ TEST 3 --------------------------
+ -- Sorting in ascending order on the int field -- 
+Test3 -- Sorting of int field OK
+
+ -- Sorting in descending order on the float field -- 
+Test3 -- Sorting of float field OK
+
+------------------- TEST 3 comp
